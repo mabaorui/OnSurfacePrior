@@ -1,7 +1,7 @@
 ## Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors(CVPR 2022)
 
 This repository contains the code to reproduce the results from the paper.
-[Neural-Pull: Learning Signed Distance Functions from Point Clouds by Learning to Pull Space onto Surfaces](https://arxiv.org/abs/2011.13495).
+[Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://arxiv.org/abs/2011.13495).
 
 You can find detailed usage instructions for training your own models and using pretrained models below.
 
