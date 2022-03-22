@@ -31,7 +31,7 @@ If you find our code or paper useful, please consider citing
 First you have to make sure that you have all dependencies in place.
 The simplest way to do so, is to use [anaconda](https://www.anaconda.com/). 
 
-You can create an anaconda environment called `tensorflow1` using
+You can create an anaconda environment called `tf` using
 ```
 conda env create -f tf.yaml
 conda activate tf
