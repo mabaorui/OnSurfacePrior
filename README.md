@@ -35,7 +35,7 @@ You can create an anaconda environment called `tensorflow1` using
 ```
 conda env create -f tf.yaml
 conda activate tf
-
+```
 ## Training
 You can train a new network from pre-train On-Surface Prior Networks, run
 
