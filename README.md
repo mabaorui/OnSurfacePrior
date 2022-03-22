@@ -40,11 +40,11 @@ conda activate tf
 You can train a new network from pre-train On-Surface Prior Networks, run
 
 ```
-python onSurPrior.py --data_dir ./test/ --out_dir ./test_net/ --CUDA 0 --INPUT_NUM 500 --epoch 30000 --input_ply_file input.ply --train
+python onSurPrior.py --data_dir ./data/ --out_dir ./train_net/ --CUDA 0 --INPUT_NUM 500 --epoch 30000 --input_ply_file input.ply --train
 ```
 You should put the point cloud file(--input_ply_file, only ply format) into the '--out_dir' folder, '--INPUT_NUM' is the number of points in the '--input_ply_file'.
 ## Test
 You can extract the mesh model from the trained network, run
 ```
-python onSurPrior.py --data_dir ./test/ --out_dir ./test_net/ --CUDA 0 --INPUT_NUM 500 --epoch 30000 --input_ply_file input.ply --test
+python onSurPrior.py --data_dir ./data/ --out_dir ./train_net/ --CUDA 0 --INPUT_NUM 500 --epoch 30000 --input_ply_file input.ply --test
 ```
