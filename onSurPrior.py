@@ -10,24 +10,23 @@ Created on Thu Jul 23 16:44:22 2020
 #*******************************************************
 ############################################################
 import numpy as np
-import tensorflow as tf 
-#import tensorflow.compat.v1 as tf
-#tf.disable_v2_behavior()
+#import tensorflow as tf 
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import os 
 import shutil
 import random
 import math
 import scipy.io as sio
 import time
-import binvox_rw
 import argparse
 import trimesh
-from im2mesh.utils import libmcubes
-from im2mesh.utils.libkdtree import KDTree
 import re
 from scipy.spatial import cKDTree
 from plyfile import PlyData
 from plyfile import PlyElement
+#import mcubes
+from skimage.measure import marching_cubes_lewiner
 
 
 parser = argparse.ArgumentParser()
@@ -82,34 +81,6 @@ if(TRAIN or a.dis):
     os.makedirs(OUTPUT_DIR)
 
 
-def get_aver(distances, face):
-    return (distances[face[0]] + distances[face[1]] + distances[face[2]]) / 3.0
-
-def remove_far(gt_pts, mesh, dis_trunc=0.1, is_use_prj=False):
-    # gt_pts: trimesh
-    # mesh: trimesh
-
-    gt_kd_tree = cKDTree(gt_pts)
-    distances, vertex_ids = gt_kd_tree.query(mesh.vertices, p=2, distance_upper_bound=dis_trunc)
-    faces_remaining = []
-    faces = mesh.faces
-
-    if is_use_prj:
-        normals = gt_pts.vertex_normals
-        closest_points = gt_pts.vertices[vertex_ids]
-        closest_normals = normals[vertex_ids]
-        direction_from_surface = mesh.vertices - closest_points
-        distances = direction_from_surface * closest_normals
-        distances = np.sum(distances, axis=1)
-
-    for i in range(faces.shape[0]):
-        if get_aver(distances, faces[i]) < dis_trunc:
-            faces_remaining.append(faces[i])
-    mesh_cleaned = mesh.copy()
-    mesh_cleaned.faces = faces_remaining
-    mesh_cleaned.remove_unreferenced_vertices()
-
-    return mesh_cleaned
 
 def fully_connected(inputs,
                     num_outputs,
@@ -268,83 +239,6 @@ def conv2d(inputs,
       return outputs
 
 
-def distance_p2p(points_src, normals_src, points_tgt, normals_tgt):
-    ''' Computes minimal distances of each point in points_src to points_tgt.
-
-    Args:
-        points_src (numpy array): source points
-        normals_src (numpy array): source normals
-        points_tgt (numpy array): target points
-        normals_tgt (numpy array): target normals
-    '''
-    kdtree = KDTree(points_tgt)
-    dist, idx = kdtree.query(points_src)
-
-    if normals_src is not None and normals_tgt is not None:
-        normals_src = \
-            normals_src / np.linalg.norm(normals_src, axis=-1, keepdims=True)
-        normals_tgt = \
-            normals_tgt / np.linalg.norm(normals_tgt, axis=-1, keepdims=True)
-
-#        normals_dot_product = (normals_tgt[idx] * normals_src).sum(axis=-1)
-#        # Handle normals that point into wrong direction gracefully
-#        # (mostly due to mehtod not caring about this in generation)
-#        normals_dot_product = np.abs(normals_dot_product)
-        
-        normals_dot_product = np.abs(normals_tgt[idx] * normals_src)
-        normals_dot_product = normals_dot_product.sum(axis=-1)
-    else:
-        normals_dot_product = np.array(
-            [np.nan] * points_src.shape[0], dtype=np.float32)
-    return dist, normals_dot_product
-
-def eval_pointcloud(pointcloud, pointcloud_tgt,
-                        normals=None, normals_tgt=None):
-        ''' Evaluates a point cloud.
-
-        Args:
-            pointcloud (numpy array): predicted point cloud
-            pointcloud_tgt (numpy array): target point cloud
-            normals (numpy array): predicted normals
-            normals_tgt (numpy array): target normals
-        '''
-        # Return maximum losses if pointcloud is empty
-
-
-        pointcloud = np.asarray(pointcloud)
-        pointcloud_tgt = np.asarray(pointcloud_tgt)
-
-        # Completeness: how far are the points of the target point cloud
-        # from thre predicted point cloud
-        completeness, completeness_normals = distance_p2p(
-            pointcloud_tgt, normals_tgt, pointcloud, normals
-        )
-        completeness2 = completeness**2
-
-        completeness = completeness.mean()
-        completeness2 = completeness2.mean()
-        completeness_normals = completeness_normals.mean()
-
-        # Accuracy: how far are th points of the predicted pointcloud
-        # from the target pointcloud
-        accuracy, accuracy_normals = distance_p2p(
-            pointcloud, normals, pointcloud_tgt, normals_tgt
-        )
-        accuracy2 = accuracy**2
-
-        accuracy = accuracy.mean()
-        accuracy2 = accuracy2.mean()
-        accuracy_normals = accuracy_normals.mean()
-        #print(completeness,accuracy,completeness2,accuracy2)
-        # Chamfer distance
-        chamferL2 = 0.5 * (completeness2 + accuracy2)
-        print('chamferL2:',chamferL2)
-        normals_correctness = (
-            0.5 * completeness_normals + 0.5 * accuracy_normals
-        )
-        chamferL1 = 0.5 * (completeness + accuracy)
-        print('normals_correctness:',normals_correctness,'chamferL1:',chamferL1)
-        return normals_correctness, chamferL1, chamferL2
 
 def safe_norm_np(x, epsilon=1e-12, axis=1):
     return np.sqrt(np.sum(x*x, axis=axis) + epsilon)
@@ -841,7 +735,7 @@ with tf.Session(config=config) as sess:
         start_time = time.time()
 
         sess.run(tf.global_variables_initializer())
-        saver.restore(sess, '/data/mabaorui/nerualpull_gan/dis_table__500_50/model-10201') 
+        saver.restore(sess, './pre_train_model/dis_table__500_50/model-10201') 
         load_data = np.load(a.data_dir + a.input_ply_file + '.npz')
     
         samples = np.asarray(load_data['sample']).reshape(1,-1,3)
@@ -938,7 +832,9 @@ with tf.Session(config=config) as sess:
             
             if(np.sum(vox>0.0)<np.sum(vox<0.0)):
                 thresh = -thresh
-            vertices, triangles = libmcubes.marching_cubes(vox, thresh)
+            #vertices, triangles = libmcubes.marching_cubes(vox, thresh)
+            #vertices, triangles = mcubes.marching_cubes(vox, thresh)
+            vertices, triangles, _, _ = marching_cubes_lewiner(vox, thresh)
             if(vertices.shape[0]<10 or triangles.shape[0]<10):
                 print('no sur---------------------------------------------')
                 continue
