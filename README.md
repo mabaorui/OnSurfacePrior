@@ -1,4 +1,4 @@
-## Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors(CVPR 2022)
+# Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors(CVPR 2022)
 
 This repository contains the code to reproduce the results from the paper.
 [Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://arxiv.org/abs/2011.13495).
