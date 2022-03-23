@@ -4,11 +4,6 @@ Created on Thu Jul 23 16:44:22 2020
 
 @author: Administrator
 """
-############################
-#knn 训练dis net + dis 输入查询点与knn相减的向量 + 旋转 + 测试集多个模型 + 一边训练一边读模型 + cvpr场景 + 归一化场景测试
-# train 阶段每次优化一个模型
-#*******************************************************
-############################################################
 import numpy as np
 #import tensorflow as tf 
 import tensorflow.compat.v1 as tf
