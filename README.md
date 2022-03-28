@@ -1,15 +1,15 @@
 # Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors (CVPR 2022)
 
 This repository contains the code to reproduce the results from the paper.
-[Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://arxiv.org/abs/2011.13495).
+[Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://yushen-liu.github.io/main/pdf/LiuYS_CVPR2022_OnSurfacePriors.pdf).
 
 You can find detailed usage instructions for training your own models and using pretrained models below.
 
 If you find our code or paper useful, please consider citing
 
-    @inproceedings{NeuralPull,
+    @inproceedings{On-SurfacePriors,
         title = {Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors},
-        author = {Baorui, Ma and Yu-shen, Liu and Zhizhong, Han},
+        author = {Baorui, Ma and Yu-Shen, Liu and Zhizhong, Han},
         booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
         year = {2022}
     }
