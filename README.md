@@ -3,7 +3,7 @@
 <h2 align="center"><a href="https://arxiv.org/abs/2204.10603">Paper</a> | <a href="https://mabaorui.github.io/-OnSurfacePrior_project_page/">Project Page</a></h2>
 
 This repository contains the code to reproduce the results from the paper.
-[Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://yushen-liu.github.io/main/pdf/LiuYS_CVPR2022_OnSurfacePriors.pdf).
+[Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://arxiv.org/abs/2204.10603).
 
 You can find detailed usage instructions for training your own models and using pretrained models below.
 
