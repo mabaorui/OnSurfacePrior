@@ -1,6 +1,6 @@
 # Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors (CVPR 2022)
 
-<h2 align="center"><a href="https://arxiv.org/abs/2204.10603">Paper</a> | <a href="https://mabaorui.github.io/-OnSurfacePrior_project_page/">Project Page</a></h2>
+<h2 align="center"><a href="https://mabaorui.github.io/">Personal Web Pages</a> | <a href="https://arxiv.org/abs/2204.10603">Paper</a> | <a href="https://mabaorui.github.io/-OnSurfacePrior_project_page/">Project Page</a></h2>
 
 This repository contains the code to reproduce the results from the paper.
 [Reconstructing Surfaces for Sparse Point Clouds with On-Surface Priors](https://arxiv.org/abs/2204.10603).
