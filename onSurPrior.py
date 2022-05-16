@@ -730,18 +730,19 @@ with tf.Session(config=config) as sess:
         start_time = time.time()
 
         sess.run(tf.global_variables_initializer())
-        saver.restore(sess, './pre_train_model/dis_table__500_50/model-10201') 
+        saver.restore(sess, './pre_train_model/model-10201') 
         load_data = np.load(a.data_dir + a.input_ply_file + '.npz')
     
         samples = np.asarray(load_data['sample']).reshape(1,-1,3)
         pointclouds = np.asarray(load_data['pointcloud_s']).reshape(1,1,-1,3)
         SP_NUM = samples.shape[1]
+        feature_bs_t =  np.tile(feature_bs[0,:],[POINT_NUM]).reshape(-1,test_num)
         for i in range(a.epoch):
-            rt = np.random.choice(SP_NUM, POINT_NUM, replace = False)
+            #rt = np.random.choice(SP_NUM, POINT_NUM, replace = False)
+            index_coarse = np.random.choice(10, 1)
+            index_fine = np.random.choice(SP_NUM//10, POINT_NUM, replace = False)
+            rt = index_fine * 10 + index_coarse
             input_points_2d_bs = samples[0,rt,:].reshape(POINT_NUM, 3)
-            #feature_bs_t = feature_bs[epoch,:,:].reshape(-1,test_num)
-            feature_bs_t =  np.tile(feature_bs[0,:],[POINT_NUM]).reshape(-1,test_num)
-            #print(feature_bs_t.shape)
             knn_bs = pointclouds[0,0,:,:].reshape(1,-1,3)
             sess.run([loss_optim],feed_dict={input_points_3d:input_points_2d_bs,feature_object:feature_bs_t,points_target_sparse:knn_bs})
             if(i%500 == 0):
