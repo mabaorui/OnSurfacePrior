@@ -16,6 +16,20 @@ If you find our code or paper useful, please consider citing
         year = {2022}
     }
 
+## Pytorch Version
+This work was originally implemented by tensorflow, pytroch version of the code will be released soon that is easier to use.
+
+Related work
+```bash
+Pytorch 
+https://github.com/mabaorui/NeuralPull-Pytorch
+Tensorflow
+https://github.com/mabaorui/NeuralPull
+https://github.com/mabaorui/OnSurfacePrior
+https://github.com/mabaorui/PredictableContextPrior
+```
+
+
 ## Surface Reconstruction Demo
 <p align="left">
   <img src="img/ParisStreet_part.jpg" width="780" />
