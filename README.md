@@ -64,3 +64,6 @@ You can extract the mesh model from the trained network, run
 ```
 python onSurPrior.py --data_dir ./data/ --out_dir ./train_net/ --CUDA 0 --INPUT_NUM 500 --epoch 30000 --input_ply_file input.ply --test
 ```
+
+## ToDo
+In different datasets or your own data, because of the variation in point cloud density, this ['0.25' parameter](https://github.com/mabaorui/OnSurfacePrior/blob/d53bf3a7bc88837e2974ddc1fd0700ecc2641ade/onSurPrior.py#L425) has a very strong influence on the final result, which controls the distance between the query points and the point cloud. So if you want to get better results, you should adjust this parameter. We give '0.25' here as a reference value, and this value can be used for most object-level reconstructions. For the scene dataset, we will later publish the reference values for the hyperparameter settings for the scene dataset.
