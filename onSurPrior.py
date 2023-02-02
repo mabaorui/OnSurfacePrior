@@ -454,8 +454,8 @@ def sample_query_points(input_ply_file):
     sample = np.asarray(sample).reshape(-1,3)
     np.savez_compressed(a.data_dir + input_ply_file , sample = sample, pointcloud_s = pointcloud_s, trans = trans, scal = scal)
 
-if(TRAIN or a.dis):
-    sample_query_points(a.input_ply_file)
+#if(TRAIN or a.dis):
+sample_query_points(a.input_ply_file)
 files = []
 files_path = []
 
